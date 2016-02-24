@@ -10,6 +10,8 @@ RUN apt-get update && \
   apt-get -y purge git && \
   apt-get -y autoremove --purge && \
   rm -rf /var/lib/apt/lists/*
-  
-ENTRYPOINT ["/usr/local/bin/acdcli"]
-CMD ["-h"]
+
+ADD entry.sh /entry.sh
+RUN chmod +x /entry.sh
+
+ENTRYPOINT ["/entry.sh"]
