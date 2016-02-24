@@ -14,7 +14,7 @@ RUN apt-get update && \
 RUN mkdir /cache && mkdir /root/.cache/acd_cli && ln -s /cache /root/.cache/acd_cli
 VOLUME ["/cache", "/home"]
 
-ADD entry.sh /entrypoint.sh
+ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
