@@ -8,7 +8,7 @@ RUN apt-get update && \
   easy_install3 -U pip && \
   pip3 install --upgrade git+https://github.com/yadayada/acd_cli.git && \
   apt-get -y purge git && \
-  apt-get -y autoremove --purge && \
+  apt-get -y autoremove --purge && apt-get autoclean && apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /cache /home && mkdir /root/.cache/acd_cli && ln -s /cache /root/.cache/acd_cli
