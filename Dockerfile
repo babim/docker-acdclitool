@@ -11,6 +11,10 @@ RUN apt-get update && \
   apt-get -y autoremove --purge && \
   rm -rf /var/lib/apt/lists/*
 
+
+RUN mkdir /cache /home && mkdir /root/.cache/acd_cli && ln -s /cache /root/.cache/acd_cli
+VOLUME ["/cache", "/home"]
+
 ADD entry.sh /entry.sh
 RUN chmod +x /entry.sh
 
