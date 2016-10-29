@@ -7,5 +7,5 @@ docker run -it --name acdcli -v ~/.cache/acd_cli:/cache -v /yourdata:/data babim
 If not have uid and gid option. ACD_CLI with run in uid 1000
 add uid and gid option
 ```
--e uid="0" -e gid="0"
+-e auid="0" -e agid="0"
 ```
