@@ -11,7 +11,7 @@ RUN apt-get update && \
   apt-get -y autoremove --purge && apt-get autoclean && apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /cache && mkdir /root/.cache/acd_cli && ln -s /cache /root/.cache/acd_cli
+RUN mkdir /cache && mkdir /root/.cache && ln -s /cache /root/.cache/acd_cli
 VOLUME ["/cache", "/home"]
 
 ADD entrypoint.sh /entrypoint.sh
