@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# overwrite /etc/fuse.conf with ours to allow other users to access the mounted filesystem from outside the container
+# overwrite /etc/fuse.conf to allow other users to access the mounted filesystem from outside the container
 cat <<EOF> /etc/fuse.conf
 # Allow non-root users to specify the 'allow_other' or 'allow_root'
 # mount options.
