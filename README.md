@@ -11,3 +11,6 @@ or set 0 to run with root
 I you want use https proxy
 ```
 -e PROXY=https://test.lan:8443
+```
+If want mount
+`--privileged`
