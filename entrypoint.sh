@@ -13,16 +13,16 @@ export ACD_CLI_SETTINGS_PATH=/cache
 export HTTPS_PROXY="$PROXY"
 
 # set ID docker run
-auid1=${auid:-1000}
-agid1=${agid:-1000}
+auid=${auid:-1000}
+agid=${agid:-1000}
 
 if [[ "$auid1" = "0" ]] || [[ "$aguid1" == "0" ]]; then
   echo "Run in ROOT user"
 else
   echo "Run in user"
   if [ ! -d "/home/user" ]; then
-  addgroup -g ${agid1} user && \
-  adduser -D -u ${auid1} user && addgroup user user && \
+  addgroup -g ${agid} user && \
+  adduser -D -u ${auid} -G user user && \
   mkdir -p /home/user/.cache/acd_cli
   ln -s /cache /home/user/.cache/acd_cli
   chown -R $uid:$gid /home/user
