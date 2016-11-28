@@ -35,5 +35,14 @@ echo "use acdcli command"
 echo "---"
 acdcli -h
 
-# stop wait command
+# create startup run
+if [ ! -f "/config/startup.sh" ]; then
+cat <<EOF>> /config/startup.sh
+#!/bin/sh
+# your startup command
+EOF
+chmod +x /config/startup.sh
+fi
+
+# stop and wait command
 sh
