@@ -37,14 +37,14 @@ acdcli -h
 
 # create startup run
 if [ ! -f "/config/startup.sh" ]; then
-  # create
+# create
   cat <<EOF>> /config/startup.sh
   #!/bin/sh
   # your startup command
   EOF
   chmod +x /config/startup.sh
 else
-  # run
+# run
   /config/startup.sh
 fi
 
