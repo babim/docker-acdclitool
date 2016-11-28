@@ -8,8 +8,9 @@ user_allow_other
 EOF
 
 # set env for ACDCLI
-ACD_CLI_CACHE_PATH=/cache
-ENV ACD_CLI_SETTINGS_PATH=/cache
+export ACD_CLI_CACHE_PATH=/cache
+export ACD_CLI_SETTINGS_PATH=/cache
+export HTTPS_PROXY="$PROXY"
 
 # set ID docker run
 auid1=${auid:-1000}
