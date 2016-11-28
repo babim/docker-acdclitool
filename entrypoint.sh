@@ -36,16 +36,16 @@ echo "---"
 acdcli -h
 
 # create startup run
-if [ ! -f "/config/startup.sh" ]; then
+if [ ! -f "/cache/startup.sh" ]; then
 # create
-cat <<EOF>> /config/startup.sh
+cat <<EOF>> /cache/startup.sh
 #!/bin/sh
 # your startup command
 EOF
-  chmod +x /config/startup.sh
+  chmod +x /cache/startup.sh
 else
 # run
-  /config/startup.sh
+  /cache/startup.sh
 fi
 
 # stop and wait command
