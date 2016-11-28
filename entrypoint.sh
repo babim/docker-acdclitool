@@ -7,6 +7,10 @@ cat <<EOF> /etc/fuse.conf
 user_allow_other
 EOF
 
+# set env for ACDCLI
+ACD_CLI_CACHE_PATH=/cache
+ENV ACD_CLI_SETTINGS_PATH=/cache
+
 # set ID docker run
 auid1=${auid:-1000}
 agid1=${agid:-1000}
