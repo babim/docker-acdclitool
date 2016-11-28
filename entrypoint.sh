@@ -21,8 +21,8 @@ if [[ "$auid1" = "0" ]] || [[ "$aguid1" == "0" ]]; then
 else
   echo "Run in user"
   if [ ! -d "/home/user" ]; then
-  groupadd --gid ${agid1} user && \
-  useradd --uid ${auid1} --gid ${agid1} --create-home user
+  addgroup -g ${agid1} user && \
+  adduser -D -u ${auid1} user && addgroup user user && \
   mkdir -p /home/user/.cache/acd_cli
   ln -s /cache /home/user/.cache/acd_cli
   chown -R $uid:$gid /home/user
