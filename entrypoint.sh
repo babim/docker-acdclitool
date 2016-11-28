@@ -25,7 +25,10 @@ else
   su - user
 fi
 
+# help
 echo "use acdcli command"
 echo "---"
 acdcli -h
+
+# stop wait command
 sh
