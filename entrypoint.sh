@@ -1,5 +1,13 @@
-#!/bin/bash
+#!/bin/sh
 
+# overwrite /etc/fuse.conf with ours to allow other users to access the mounted filesystem from outside the container
+cat <<EOF> /etc/fuse.conf
+# Allow non-root users to specify the 'allow_other' or 'allow_root'
+# mount options.
+user_allow_other
+EOF
+
+# set ID docker run
 auid1=${auid:-1000}
 agid1=${agid:-1000}
 
@@ -20,4 +28,4 @@ fi
 echo "use acdcli command"
 echo "---"
 acdcli -h
-bash
+sh
