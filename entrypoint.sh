@@ -42,6 +42,8 @@ cat <<EOF>> /config/startup.sh
 # your startup command
 EOF
 chmod +x /config/startup.sh
+else
+/config/startup.sh
 fi
 
 # stop and wait command
