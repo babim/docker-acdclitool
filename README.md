@@ -7,3 +7,6 @@ If not have uid and gid option. ACD_CLI with run in uid 1000 add uid and gid opt
 ```
 -e auid="0" -e agid="0"
 ```
+I you want use https proxy
+```
+-e PROXY=https://test.lan:8443
