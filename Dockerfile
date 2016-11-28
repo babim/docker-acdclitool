@@ -5,8 +5,8 @@ FROM babim/alpinebase
 RUN mkdir /cache /data /cloud
 
 # set the cache, settings, and libfuse path accordingly
-#ENV ACD_CLI_CACHE_PATH /cache
-#ENV ACD_CLI_SETTINGS_PATH /config
+ENV ACD_CLI_CACHE_PATH /cache
+ENV ACD_CLI_SETTINGS_PATH /cache
 ENV LIBFUSE_PATH /usr/lib/libfuse.so.2
 
 # install python 3, fuse, and git
@@ -19,8 +19,6 @@ RUN pip3 install --upgrade git+https://github.com/yadayada/acd_cli.git
 RUN apk del git
 
 VOLUME /config /cache /local /cloud
-
-RUN mkdir /cache && ln -s /cache /root/.cache/acd_cli
 
 #VOLUME ["/config", "/cache", "/data", "/cloud"]
 VOLUME ["/cache", "/data", "/cloud"]
