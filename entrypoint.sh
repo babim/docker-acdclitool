@@ -16,7 +16,7 @@ export HTTPS_PROXY="$PROXY"
 auid=${auid:-1000}
 agid=${agid:-1000}
 
-if [[ "$auid1" = "0" ]] || [[ "$aguid1" == "0" ]]; then
+if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
   echo "Run in ROOT user"
 else
   echo "Run in user"
