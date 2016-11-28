@@ -1,5 +1,3 @@
-Thanks pwntr
-
 # Usage
 acdcli amazon cloud drive tool on alpine linux
 ```
