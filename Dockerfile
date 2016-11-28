@@ -2,7 +2,7 @@ FROM babim/alpinebase
 
 # create dirs for the config, local mount point, and cloud destination
 #RUN mkdir /config /cache /data /cloud
-#RUN mkdir /cache /data /cloud
+RUN mkdir /cache /data /cloud
 
 # set the cache, settings, and libfuse path accordingly
 #ENV ACD_CLI_CACHE_PATH /cache
