@@ -39,7 +39,7 @@ else
   chown -R $auid:$agid $CONFIGPATH $CACHEPATH
   # fix su command user
   sed -i '$ d' /etc/passwd
-  echo "$auser:x:$auid:$agid:Linux User:/home/$auser:/bin/sh >> /etc/passwd
+  echo "$auser:x:$auid:$agid:Linux User:/home/$auser:/bin/sh" >> /etc/passwd
   fi
 fi
 
