@@ -5,9 +5,11 @@ docker run -it --name acdcli -v ~/.cache/acd_cli:/cache -v /yourdata:/data babim
 ```
 Amazon Cloud Drive will mount to /cloud (default) and this container share /cloud over Webdav
 `-e CLOUDPATH=/cloud`
+By default the WebDAV server is password protected with user `webdav` and password `davbew`
 
 If not have uid and gid option. ACD_CLI with run in uid 1000 add uid and gid option
 or set 0 to run with root
+
 ```
 -e auid="0" -e agid="0"
 ```
