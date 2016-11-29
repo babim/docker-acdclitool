@@ -27,8 +27,8 @@ RUN sed -i 's/#user_allow_other/user_allow_other/' /etc/fuse.conf
 RUN addgroup -g ${agid} user && \
     adduser -D -u ${auid} -G user user && \
     mkdir -p /home/user/.cache/acd_cli && \
-    ln -s /cache /home/user/.cache/acd_cli && \
-    chown -R $uid:$gid /home/user
+    ln -sf /cache /home/user/.cache/acd_cli && \
+    chown -R $auid:$agid /home/user
 
 #VOLUME ["/config", "/cache", "/data", "/cloud"]
 VOLUME ["/cache", "/data", "/cloud"]
