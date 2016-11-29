@@ -23,17 +23,18 @@ export HTTP_PROXY="$PROXY"
 # set ID docker run
 auid=${auid:-1000}
 agid=${agid:-1000}
+auser=${auser:-user}
 
 if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
   echo "Run in ROOT user"
 else
   echo "Run in user"
   if [ ! -d "/home/user" ]; then
-  addgroup -g ${agid} user && \
-  adduser -D -u ${auid} -G user user && \
-  mkdir -p /home/user/.cache/acd_cli #no need
-  ln -sf $CACHEPATH /home/user/.cache/acd_cli #no need
-  chown -R $auid:$agid /home/user #no need
+  addgroup -g ${agid} $auser && \
+  adduser -D -u ${auid} -G $auser $auser && \
+  mkdir -p /home/$auser/.cache/acd_cli #no need
+  ln -sf $CACHEPATH /home/$auser/.cache/acd_cli #no need
+  chown -R $auid:$agid /home/$auser #no need
   fi
   su - user
 fi
@@ -53,18 +54,18 @@ fi
 
 # webdav
 # Force user and group because lighttpd runs as webdav
-USERNAME=webdav
-GROUP=webdav
-WEBDAVPASS=${WEBDAVPASS:-123456}
+USERNAME=${auser}
+GROUP=${auser}
+WEBDAVPASS=${WEBDAVPASS:-kK1eUy0t2agv6}
 
 # Only allow read access by default
 READWRITE=${READWRITE:=false}
 
 # Add user if it does not exist
-if ! id -u "${USERNAME}" >/dev/null 2>&1; then
-	addgroup -g ${USER_GID:=2222} ${GROUP}
-	adduser -G ${GROUP} -D -H -u ${USER_UID:=2222} ${USERNAME}
-fi
+#if ! id -u "${USERNAME}" >/dev/null 2>&1; then
+#	addgroup -g ${USER_GID:=2222} ${GROUP}
+#	adduser -G ${GROUP} -D -H -u ${USER_UID:=2222} ${USERNAME}
+#fi
 
 chown webdav /var/log/lighttpd
 
