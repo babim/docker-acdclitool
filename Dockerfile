@@ -8,7 +8,7 @@ RUN mkdir /cache /data /cloud
 ENV ACD_CLI_CACHE_PATH /cache
 ENV ACD_CLI_SETTINGS_PATH /cache
 ENV LIBFUSE_PATH /usr/lib/libfuse.so.2
-ENV agid 1000
+ENV auid 1000
 ENV agid 1000
 
 # install python 3, fuse, and git
@@ -24,8 +24,7 @@ RUN apk del git
 RUN sed -i 's/#user_allow_other/user_allow_other/' /etc/fuse.conf
 
 # create user
-RUN addgroup -g ${agid} user && \
-    adduser -D -u ${auid} -G user user && \
+RUN adduser -S -D -u $auid -g $agid user && \
     mkdir -p /home/user/.cache/acd_cli && \
     ln -sf /cache /home/user/.cache/acd_cli && \
     chown -R $auid:$agid /home/user
