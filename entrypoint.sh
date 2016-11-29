@@ -11,9 +11,9 @@ EOF
 CONFIGPATH=${CONFIGPATH:-/cache}
 CACHEPATH=${CACHEPATH:-/cache}
 CLOUDPATH=${CLOUDPATH:-/cloud}
-if [ ! -d "CONFIGPATH" ]; then mkdir -p CONFIGPATH; fi
-if [ ! -d "CACHEPATH" ]; then mkdir -p CACHEPATH; fi
-if [ ! -d "CLOUDPATH" ]; then mkdir -p CLOUDPATH; fi
+if [ ! -d "$CONFIGPATH" ]; then mkdir -p $CONFIGPATH; fi
+if [ ! -d "$CACHEPATH" ]; then mkdir -p $CACHEPATH; fi
+if [ ! -d "$CLOUDPATH" ]; then mkdir -p $CLOUDPATH; fi
 
 export ACD_CLI_CACHE_PATH=$CACHEPATH
 export ACD_CLI_SETTINGS_PATH=$CONFIGPATH
