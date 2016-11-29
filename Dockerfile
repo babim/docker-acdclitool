@@ -20,6 +20,7 @@ RUN apk del git
 
 # install webdav
 RUN apk add --no-cache lighttpd lighttpd-mod_webdav lighttpd-mod_auth
+ADD files/* /etc/lighttpd/
 
 #VOLUME ["/config", "/cache", "/data", "/cloud"]
 VOLUME ["/cache", "/data", "/cloud"]
