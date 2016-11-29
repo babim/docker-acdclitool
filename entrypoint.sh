@@ -63,6 +63,7 @@ fi
 fi
 
 # webdav
+if [ -z "`ls $CLOUDPATH`" ]; then chown -R $auser:$auser $CLOUDPATH; fi
 # Force user and group because lighttpd runs as webdav
 USERNAME=${auser}
 GROUP=${auser}
@@ -165,7 +166,7 @@ chown ${USERNAME}:${GROUP} /locks
 # Force the /webdav directory to be owned by webdav/webdav otherwise we won't be
 # able to write to it. This is ok if you mount from volumes, perhaps less if you
 # mount from the host, so do this conditionally.
-OWNERSHIP=${OWNERSHIP:=true}
+OWNERSHIP=${OWNERSHIP:=false}
 if [ "$OWNERSHIP" == "true" ]; then
     chown -R $USERNAME $CLOUDPATH
     chgrp -R $USERNAME $CLOUDPATH
