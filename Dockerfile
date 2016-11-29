@@ -8,6 +8,8 @@ RUN mkdir /cache /data /cloud
 ENV ACD_CLI_CACHE_PATH /cache
 ENV ACD_CLI_SETTINGS_PATH /cache
 ENV LIBFUSE_PATH /usr/lib/libfuse.so.2
+ENV auid 1000
+ENV guid 1000
 
 # install python 3, fuse, and git
 RUN apk add --no-cache python3 fuse git && pip3 install --upgrade pip
@@ -18,10 +20,24 @@ RUN pip3 install --upgrade git+https://github.com/yadayada/acd_cli.git
 # no need for git or the apk cache anymore
 RUN apk del git
 
+# overwrite /etc/fuse.conf to allow other users to access the mounted filesystem from outside the container
+RUN cat <<EOF> /etc/fuse.conf
+# Allow non-root users to specify the 'allow_other' or 'allow_root'
+# mount options.
+user_allow_other
+EOF
+
+# create user
+RUN addgroup -g ${agid} user && \
+    adduser -D -u ${auid} -G user user && \
+    mkdir -p /home/user/.cache/acd_cli && \
+    ln -s /cache /home/user/.cache/acd_cli && \
+    chown -R $uid:$gid /home/user
+
 #VOLUME ["/config", "/cache", "/data", "/cloud"]
 VOLUME ["/cache", "/data", "/cloud"]
 
-ADD entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+USER user
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/acdcli"]
+CMD ["-h"]
