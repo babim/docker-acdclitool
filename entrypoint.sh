@@ -8,8 +8,11 @@ user_allow_other
 EOF
 
 # set env for ACDCLI
-export ACD_CLI_CACHE_PATH=/cache
-export ACD_CLI_SETTINGS_PATH=/cache
+CONFIGPATH=${CONFIGPATH:-/cache}
+CACHEPATH=${CACHEPATH:-/cache}
+
+export ACD_CLI_CACHE_PATH=$CACHEPATH
+export ACD_CLI_SETTINGS_PATH=$CONFIGPATH
 export HTTPS_PROXY="$PROXY"
 export HTTP_PROXY="$PROXY"
 
@@ -29,9 +32,9 @@ else
   if [ ! -d "/home/user" ]; then
   addgroup -g ${agid} user && \
   adduser -D -u ${auid} -G user user && \
-  mkdir -p /home/user/.cache/acd_cli
-  ln -s /cache /home/user/.cache/acd_cli
-  chown -R $auid:$agid /home/user
+  mkdir -p /home/user/.cache/acd_cli #no need
+  ln -sf $CACHEPATH /home/user/.cache/acd_cli #no need
+  chown -R $auid:$agid /home/user #no need
   fi
   su - user
 fi
@@ -44,16 +47,16 @@ echo "---"
 acdcli -h
 
 # create startup run
-if [ ! -f "/cache/startup.sh" ]; then
+if [ ! -f "$CONFIGPATH/startup.sh" ]; then
 # create
-cat <<EOF>> /cache/startup.sh
+cat <<EOF>> $CONFIGPATH/startup.sh
 #!/bin/sh
 # your startup command
 EOF
-  chmod +x /cache/startup.sh
+  chmod +x $CONFIGPATH/startup.sh
 else
 # run
-  /cache/startup.sh
+  $CONFIGPATH/startup.sh
 fi
 
 # stop and wait command
