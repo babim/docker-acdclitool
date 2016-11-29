@@ -25,3 +25,5 @@ CACHEPATH default: /cache
 ```
 Read/write (default is false)
 `-e READWRITE=true`
+
+WHITELIST Regexp for a list of IP's (default: none). Example: `-e WHITELIST='192.168.1.*|172.16.1.2'`
