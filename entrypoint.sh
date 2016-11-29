@@ -25,7 +25,7 @@ else
   adduser -D -u ${auid} -G user user && \
   mkdir -p /home/user/.cache/acd_cli
   ln -s /cache /home/user/.cache/acd_cli
-  chown -R $uid:$gid /home/user
+  chown -R $auid:$agid /home/user
   fi
   su - user
 fi
