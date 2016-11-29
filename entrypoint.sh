@@ -24,11 +24,6 @@ export HTTP_PROXY="$PROXY"
 auid=${auid:-1000}
 agid=${agid:-1000}
 
-if id user >/dev/null 2>&1; then
-        echo "user exists"
-else
-        echo "user does not exist"
-
 if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
   echo "Run in ROOT user"
 else
@@ -41,8 +36,6 @@ else
   chown -R $auid:$agid /home/user #no need
   fi
   su - user
-fi
-
 fi
 
 # create startup run
