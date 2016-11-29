@@ -92,9 +92,11 @@ fi
 
 # mount amazon cloud drive to CLOUD PATH
 if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
+    acdcli s
     acdcli mount -ao $CLOUDPATH
 else
     chown -R $auid:$agid $CLOUDPATH
+    su -c 'acdcli s' user
     su -c 'acdcli mount -ao $CLOUDPATH' user
 fi
 
