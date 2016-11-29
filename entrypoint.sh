@@ -71,15 +71,56 @@ if ! id -u "${USERNAME}" >/dev/null 2>&1; then
 	addgroup -g ${USER_GID:=2222} ${GROUP}
 	adduser -G ${GROUP} -D -H -u ${USER_UID:=2222} ${USERNAME}
 fi
+# create startup run
+if [ ! -f "$CONFIGPATH/startup.sh" ]; then
+# create
+cat <<EOF>> $CONFIGPATH/startup.sh
+#!/bin/sh
+# your startup command
+EOF
+  chmod +x $CONFIGPATH/startup.sh
+else
+# run
+  $CONFIGPATH/startup.sh
+fi
+
+# webdav
+# Force user and group because lighttpd runs as webdav
+USERNAME=webdav
+GROUP=webdav
+
+# Only allow read access by default
+READWRITE=${READWRITE:=false}
+
+# Add user if it does not exist
+if ! id -u "${USERNAME}" >/dev/null 2>&1; then
+	addgroup -g ${USER_GID:=2222} ${GROUP}
+	adduser -G ${GROUP} -D -H -u ${USER_UID:=2222} ${USERNAME}
+fi
 
 chown webdav /var/log/lighttpd
 
-if [ -n "$WHITELIST" ]; then
-	sed -i "s/WHITELIST/${WHITELIST}/" /etc/lighttpd/webdav.conf
-fi
-
-if [ "$READWRITE" = true ]; then
-	sed -i "s/readonly = \"disable\"/readonly = \"enable\"/" /etc/lighttpd/webdav.conf
+# create config for webdav
+if [ ! -f "$CONFIGPATH/lighttpd.conf" ]; then
+# create
+cat <<EOF>> $CONFIGPATH/lighttpd.conf
+server.modules = (
+    "mod_access",
+    "mod_accesslog",
+    "mod_webdav",
+    "mod_auth"
+)
+include "/etc/lighttpd/mime-types.conf"
+server.username       = "webdav"
+server.groupname      = "webdav"
+server.document-root  = "$CLOUDPATH"
+server.pid-file       = "/run/lighttpd.pid"
+server.follow-symlink = "enable"
+var.logdir            = "/var/log/lighttpd"
+accesslog.filename    = var.logdir + "/access.log"
+server.errorlog       = var.logdir  + "/error.log"
+include "$CONFIGPATH/webdav.conf"
+EOF
 fi
 
 if [ ! -f $CONFIGPATH/htpasswd ]; then
@@ -90,7 +131,15 @@ if [ ! -f $CONFIGPATH/webdav.conf ]; then
 	cp /etc/lighttpd/webdav.conf $CONFIGPATH/webdav.conf
 fi
 
-lighttpd -f /etc/lighttpd/lighttpd.conf 
+if [ -n "$WHITELIST" ]; then
+	sed -i "s/WHITELIST/${WHITELIST}/" $CONFIGPATH/webdav.conf
+fi
+
+if [ "$READWRITE" = true ]; then
+	sed -i "s/readonly = \"disable\"/readonly = \"enable\"/" $CONFIGPATH/webdav.conf
+fi
+
+lighttpd -f $CONFIGPATH/lighttpd.conf
 
 # Hang on a bit while the server starts
 sleep 2
