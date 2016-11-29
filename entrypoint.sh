@@ -67,7 +67,7 @@ fi
 # Force user and group because lighttpd runs as webdav
 USERNAME=${auser}
 GROUP=${auser}
-WEBDAVPASS=${WEBDAVPASS:-`$apr1$5AEGXPtA$kOgdSw3NXJm.tCG7iGNvq0`}
+WEBDAVPASS=${WEBDAVPASS:-webdav}
 
 # Only allow read access by default
 READWRITE=${READWRITE:=false}
@@ -155,11 +155,6 @@ fi
 
 # set webdav password
 if [ ! -f $CONFIGPATH/htpasswd ]; then
-if [ "$WEBDAVPASS" == `$apr1$5AEGXPtA$kOgdSw3NXJm.tCG7iGNvq0` ]; then
-cat <<`EOF`>> $CONFIGPATH/htpasswd
-webdav:$apr1$5AEGXPtA$kOgdSw3NXJm.tCG7iGNvq0
-EOF
-else
 htpasswd -cb $CONFIGPATH/htpasswd $auser $WEBDAVPASS
 fi
 fi
