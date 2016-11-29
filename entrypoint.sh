@@ -24,11 +24,11 @@ export HTTP_PROXY="$PROXY"
 auid=${auid:-1000}
 agid=${agid:-1000}
 
-if getent passwd $1 > /dev/null 2>&1; then
-    echo "yes the user exists"
+if id "$auid" >/dev/null 2>&1; then
+        echo "user exists"
 else
-    echo "No, the user does not exist"
-    
+        echo "user does not exist"
+ 
 if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
   echo "Run in ROOT user"
 else
