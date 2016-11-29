@@ -52,8 +52,14 @@ cat <<EOF>> $CONFIGPATH/startup.sh
 EOF
   chmod +x $CONFIGPATH/startup.sh
 else
-# run
-  $CONFIGPATH/startup.sh
+  if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
+    echo "Run in ROOT user"
+    $CONFIGPATH/startup.sh
+  else
+    # run
+    chown -R $auid:$agid $CONFIGPATH $CACHEPATH
+    su -c $CONFIGPATH/startup.sh $auser
+fi
 fi
 
 # webdav
