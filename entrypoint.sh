@@ -190,7 +190,6 @@ fi
 mkfifo -m 600 /tmp/lighttpd.log
 cat <> /tmp/lighttpd.log 1>&2 &
 chown $USERNAME /tmp/lighttpd.log
-lighttpd -f $CONFIGPATH/lighttpd.conf 2>&1
 
 # mount amazon cloud drive to CLOUD PATH
 if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
@@ -202,7 +201,4 @@ else
     su -c 'acdcli mount -ao $CLOUDPATH' $auser
 fi
 
-# Hang on a bit while the server starts
-sleep 5
-
-tail -f /var/log/lighttpd/*.log $CACHEPATH/acd_cli.log
+lighttpd -D -f $CONFIGPATH/lighttpd.conf 2>&1
