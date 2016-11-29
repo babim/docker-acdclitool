@@ -74,12 +74,32 @@ fi
 
 chown webdav /var/log/lighttpd
 
-if [ -n "$WHITELIST" ]; then
-	sed -i "s/WHITELIST/${WHITELIST}/" /etc/lighttpd/webdav.conf
-fi
+# create config for webdav
+if [ ! -f "$CONFIGPATH/lighttpd.conf" ]; then
+# create
+cat <<EOF>> $CONFIGPATH/lighttpd.conf
+server.modules = (
+    "mod_access",
+    "mod_accesslog",
+    "mod_webdav",
+    "mod_auth"
+)
 
-if [ "$READWRITE" = true ]; then
-	sed -i "s/readonly = \"disable\"/readonly = \"enable\"/" /etc/lighttpd/webdav.conf
+include "/etc/lighttpd/mime-types.conf"
+server.username       = "webdav"
+server.groupname      = "webdav"
+
+server.document-root  = "$CLOUDPATH"
+
+server.pid-file       = "/run/lighttpd.pid"
+server.follow-symlink = "enable"
+
+var.logdir            = "/var/log/lighttpd"
+accesslog.filename    = var.logdir + "/access.log"
+server.errorlog       = var.logdir  + "/error.log"
+
+include "$CONFIGPATH/webdav.conf"
+EOF
 fi
 
 if [ ! -f $CONFIGPATH/htpasswd ]; then
@@ -88,6 +108,14 @@ fi
 
 if [ ! -f $CONFIGPATH/webdav.conf ]; then
 	cp /etc/lighttpd/webdav.conf $CONFIGPATH/webdav.conf
+fi
+
+if [ -n "$WHITELIST" ]; then
+	sed -i "s/WHITELIST/${WHITELIST}/" $CONFIGPATH/webdav.conf
+fi
+
+if [ "$READWRITE" = true ]; then
+	sed -i "s/readonly = \"disable\"/readonly = \"enable\"/" $CONFIGPATH/webdav.conf
 fi
 
 # mount amazon cloud drive to CLOUD PATH
@@ -100,7 +128,7 @@ else
     su -c 'acdcli mount -ao $CLOUDPATH' user
 fi
 
-lighttpd -f /etc/lighttpd/lighttpd.conf 
+lighttpd -f $CONFIGPATH/lighttpd.conf 
 
 # Hang on a bit while the server starts
 sleep 5
