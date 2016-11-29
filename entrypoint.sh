@@ -55,6 +55,7 @@ fi
 # Force user and group because lighttpd runs as webdav
 USERNAME=webdav
 GROUP=webdav
+WEBDAVPASS=${WEBDAVPASS:-123456}
 
 # Only allow read access by default
 READWRITE=${READWRITE:=false}
@@ -82,7 +83,7 @@ include "/etc/lighttpd/mime-types.conf"
 server.username       = "webdav"
 server.groupname      = "webdav"
 
-server.document-root  = "/webdav"
+server.document-root  = "$CLOUDPATH"
 
 server.pid-file       = "/run/lighttpd.pid"
 server.follow-symlink = "enable"
@@ -98,12 +99,52 @@ include "$CONFIGPATH/webdav.conf"
 EOF
 fi
 
-if [ ! -f $CONFIGPATH/htpasswd ]; then
-	cp /etc/lighttpd/htpasswd $CONFIGPATH/htpasswd
+# create config for webdav
+if [ ! -f $CONFIGPATH/webdav.conf ]; then
+cat <<'EOF'>> $CONFIGPATH/webdav.conf
+$HTTP["remoteip"] !~ "WHITELIST" {
+
+  # Require authentication
+  $HTTP["host"] =~ "." {
+EOF
+cat <<EOF>> $CONFIGPATH/webdav.conf
+    server.document-root = "$CLOUDPATH"
+
+    webdav.activate = "enable"
+    webdav.is-readonly = "disable"
+    webdav.sqlite-db-name = "/locks/lighttpd.webdav_lock.db" 
+
+    auth.backend = "htpasswd"
+    auth.backend.htpasswd.userfile = "/cache/htpasswd"
+    auth.require = ( "" => ( "method" => "basic",
+                             "realm" => "webdav",
+                             "require" => "valid-user" ) )
+  }
+
+}
+EOF
+cat <<'EOF'>> $CONFIGPATH/webdav.conf
+else $HTTP["remoteip"] =~ "WHITELIST" {
+
+  # Whitelisted IP, do not require user authentication
+  $HTTP["host"] =~ "." {
+EOF
+cat <<EOF>> $CONFIGPATH/webdav.conf
+    server.document-root = "$CLOUDPATH"
+
+    webdav.activate = "enable"
+    webdav.is-readonly = "disable"
+    webdav.sqlite-db-name = "/locks/lighttpd.webdav_lock.db" 
+  }
+
+}
+EOF
 fi
 
-if [ ! -f $CONFIGPATH/webdav.conf ]; then
-	cp /etc/lighttpd/webdav.conf $CONFIGPATH/webdav.conf
+if [ ! -f $CONFIGPATH/htpasswd ]; then
+cat <<EOF>> $CONFIGPATH/htpasswd
+webdav:$WEBDAVPASS
+EOF
 fi
 
 if [ -n "$WHITELIST" ]; then
@@ -114,6 +155,8 @@ if [ "$READWRITE" = true ]; then
 	sed -i "s/readonly = \"disable\"/readonly = \"enable\"/" $CONFIGPATH/webdav.conf
 fi
 
+lighttpd -f $CONFIGPATH/lighttpd.conf
+
 # mount amazon cloud drive to CLOUD PATH
 if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
     acdcli s
@@ -123,8 +166,6 @@ else
     su -c 'acdcli s' user
     su -c 'acdcli mount -ao $CLOUDPATH' user
 fi
-
-lighttpd -f $CONFIGPATH/lighttpd.conf 
 
 # Hang on a bit while the server starts
 sleep 5
