@@ -10,6 +10,10 @@ EOF
 # set env for ACDCLI
 CONFIGPATH=${CONFIGPATH:-/cache}
 CACHEPATH=${CACHEPATH:-/cache}
+CLOUDPATH=${CLOUDPATH:-/cloud}
+if [ ! -d "CONFIGPATH" ]; then mkdir -p CONFIGPATH; fi
+if [ ! -d "CACHEPATH" ]; then mkdir -p CACHEPATH; fi
+if [ ! -d "CLOUDPATH" ]; then mkdir -p CLOUDPATH; fi
 
 export ACD_CLI_CACHE_PATH=$CACHEPATH
 export ACD_CLI_SETTINGS_PATH=$CONFIGPATH
@@ -41,11 +45,6 @@ fi
 
 fi
 
-# help
-echo "use acdcli command"
-echo "---"
-acdcli -h
-
 # create startup run
 if [ ! -f "$CONFIGPATH/startup.sh" ]; then
 # create
@@ -59,5 +58,49 @@ else
   $CONFIGPATH/startup.sh
 fi
 
-# stop and wait command
-sh
+# webdav
+# Force user and group because lighttpd runs as webdav
+USERNAME=webdav
+GROUP=webdav
+
+# Only allow read access by default
+READWRITE=${READWRITE:=false}
+
+# Add user if it does not exist
+if ! id -u "${USERNAME}" >/dev/null 2>&1; then
+	addgroup -g ${USER_GID:=2222} ${GROUP}
+	adduser -G ${GROUP} -D -H -u ${USER_UID:=2222} ${USERNAME}
+fi
+
+chown webdav /var/log/lighttpd
+
+if [ -n "$WHITELIST" ]; then
+	sed -i "s/WHITELIST/${WHITELIST}/" /etc/lighttpd/webdav.conf
+fi
+
+if [ "$READWRITE" = true ]; then
+	sed -i "s/readonly = \"disable\"/readonly = \"enable\"/" /etc/lighttpd/webdav.conf
+fi
+
+if [ ! -f $CONFIGPATH/htpasswd ]; then
+	cp /etc/lighttpd/htpasswd $CONFIGPATH/htpasswd
+fi
+
+if [ ! -f $CONFIGPATH/webdav.conf ]; then
+	cp /etc/lighttpd/webdav.conf $CONFIGPATH/webdav.conf
+fi
+
+# mount amazon cloud drive to CLOUD PATH
+if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
+    acdcli mount -ao $CLOUDPATH
+else
+    chown -R $auid:$agid $CLOUDPATH
+    su -c 'acdcli mount -ao $CLOUDPATH' user
+fi
+
+lighttpd -f /etc/lighttpd/lighttpd.conf 
+
+# Hang on a bit while the server starts
+sleep 5
+
+tail -f /var/log/lighttpd/*.log $CACHEPATH/acd_cli.log
