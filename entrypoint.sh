@@ -11,6 +11,7 @@ EOF
 export ACD_CLI_CACHE_PATH=/cache
 export ACD_CLI_SETTINGS_PATH=/cache
 export HTTPS_PROXY="$PROXY"
+export HTTP_PROXY="$PROXY"
 
 # set ID docker run
 auid=${auid:-1000}
