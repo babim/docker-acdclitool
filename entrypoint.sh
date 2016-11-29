@@ -153,10 +153,15 @@ cat <<EOF>> $CONFIGPATH/webdav.conf
 EOF
 fi
 
+# set webdav password
 if [ ! -f $CONFIGPATH/htpasswd ]; then
+if [ "$WEBDAVPASS" == "apr1$9pplJ7V/$5anuCo1IA53omcRH1lLE2." ]; then
 cat <<EOF>> $CONFIGPATH/htpasswd
 webdav:$WEBDAVPASS
 EOF
+else
+htpasswd -cb $CONFIGPATH/htpasswd $auser $WEBDAVPASS
+fi
 fi
 
 # Create directory to hold locks
