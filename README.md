@@ -3,7 +3,8 @@ acdcli amazon cloud drive tool on alpine linux
 ```
 docker run -it --name acdcli -v ~/.cache/acd_cli:/cache -v /yourdata:/data babim/acdcli
 ```
-Amazon Cloud Drive can mount to /cloud and this container share /cloud over Webdav
+Amazon Cloud Drive can mount to /cloud (default) and this container share /cloud over Webdav
+`-e CLOUDPATH=/cloud`
 
 If not have uid and gid option. ACD_CLI with run in uid 1000 add uid and gid option
 or set 0 to run with root
