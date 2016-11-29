@@ -14,3 +14,7 @@ I you want use https proxy
 ```
 If want mount
 `--privileged`
+
+volume -v
+`CONFIGPATH default: /cache`
+`CACHEPATH default: /cache`
