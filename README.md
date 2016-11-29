@@ -10,6 +10,7 @@ Alpine Linux base with [acd_cli](https://github.com/yadayada/acd_cli) and fuse i
 
     docker run -it --rm -v /home/ubuntu/.cache/acd_cli:/cache babim/acdcli:single ls
 ----
+--user $UID:$GID is to run as your current user, and not root.
 
 * This is a good line to wrap in a script.
 
