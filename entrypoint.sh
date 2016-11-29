@@ -90,19 +90,10 @@ if [ ! -f $CONFIGPATH/webdav.conf ]; then
 	cp /etc/lighttpd/webdav.conf $CONFIGPATH/webdav.conf
 fi
 
-# mount amazon cloud drive to CLOUD PATH
-if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
-    acdcli s
-    acdcli mount -ao $CLOUDPATH
-else
-    chown -R $auid:$agid $CLOUDPATH
-    su -c 'acdcli s' user
-    su -c 'acdcli mount -ao $CLOUDPATH' user
-fi
-
 lighttpd -f /etc/lighttpd/lighttpd.conf 
 
 # Hang on a bit while the server starts
-sleep 5
+sleep 2
 
-tail -f /var/log/lighttpd/*.log $CACHEPATH/acd_cli.log
+# stop and wait command
+sh
