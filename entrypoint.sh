@@ -71,32 +71,6 @@ if ! id -u "${USERNAME}" >/dev/null 2>&1; then
 	addgroup -g ${USER_GID:=2222} ${GROUP}
 	adduser -G ${GROUP} -D -H -u ${USER_UID:=2222} ${USERNAME}
 fi
-# create startup run
-if [ ! -f "$CONFIGPATH/startup.sh" ]; then
-# create
-cat <<EOF>> $CONFIGPATH/startup.sh
-#!/bin/sh
-# your startup command
-EOF
-  chmod +x $CONFIGPATH/startup.sh
-else
-# run
-  $CONFIGPATH/startup.sh
-fi
-
-# webdav
-# Force user and group because lighttpd runs as webdav
-USERNAME=webdav
-GROUP=webdav
-
-# Only allow read access by default
-READWRITE=${READWRITE:=false}
-
-# Add user if it does not exist
-if ! id -u "${USERNAME}" >/dev/null 2>&1; then
-	addgroup -g ${USER_GID:=2222} ${GROUP}
-	adduser -G ${GROUP} -D -H -u ${USER_UID:=2222} ${USERNAME}
-fi
 
 chown webdav /var/log/lighttpd
 
