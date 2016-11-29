@@ -22,21 +22,25 @@ export HTTP_PROXY="$PROXY"
 
 # set ID docker run
 auid=${auid:-1000}
-agid=${agid:-1000}
+agid=${agid:-$auid}
 auser=${auser:-user}
 
+# create user
 if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
   echo "Run in ROOT user"
 else
-  echo "Run in user"
-  if [ ! -d "/home/user" ]; then
+  echo "Run in $auser"
+  if [ ! -d "/home/$auser" ]; then
   addgroup -g ${agid} $auser && \
   adduser -D -u ${auid} -G $auser $auser && \
   mkdir -p /home/$auser/.cache/acd_cli #no need
   ln -sf $CACHEPATH /home/$auser/.cache/acd_cli #no need
   chown -R $auid:$agid /home/$auser #no need
+  chown -R $auid:$agid $CONFIGPATH $CACHEPATH
+  # fix su command user
+  sed -i '$ d' /etc/passwd
+  echo "$auser:x:$auid:$agid:Linux User:/home/$auser:/bin/sh >> /etc/passwd
   fi
-  su - user
 fi
 
 # create startup run
@@ -184,5 +188,11 @@ lighttpd -f $CONFIGPATH/lighttpd.conf 2>&1
 # Hang on a bit while the server starts
 sleep 2
 
+# login user
+if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
+  echo "Run in ROOT user"
+else
+  su - $auser
+fi
 # stop and wait command
 sh
