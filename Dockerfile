@@ -21,11 +21,7 @@ RUN pip3 install --upgrade git+https://github.com/yadayada/acd_cli.git
 RUN apk del git
 
 # overwrite /etc/fuse.conf to allow other users to access the mounted filesystem from outside the container
-RUN echo " \n\
-    # Allow non-root users to specify the 'allow_other' or 'allow_root'\n\
-    # mount options.\n\
-    user_allow_other\n\
-    " > /etc/fuse.conf
+RUN sed -i 's/#user_allow_other/user_allow_other/' /etc/fuse.conf
 
 # create user
 RUN addgroup -g ${agid} user && \
