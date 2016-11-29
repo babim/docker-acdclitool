@@ -80,8 +80,8 @@ server.modules = (
 )
 
 include "/etc/lighttpd/mime-types.conf"
-server.username       = "webdav"
-server.groupname      = "webdav"
+server.username       = "$USERNAME"
+server.groupname      = "$GROUP"
 
 server.document-root  = "$CLOUDPATH"
 
