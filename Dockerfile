@@ -23,7 +23,7 @@ RUN apk add --no-cache lighttpd lighttpd-mod_webdav lighttpd-mod_auth
 ADD files/* /etc/lighttpd/
 
 #VOLUME ["/config", "/cache", "/data", "/cloud"]
-VOLUME ["/cache", "/data", "/cloud"]
+VOLUME ["/cache", "/data"]
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
