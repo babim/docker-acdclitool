@@ -38,8 +38,6 @@ else
   su - user
 fi
 
-fi
-
 # create startup run
 if [ ! -f "$CONFIGPATH/startup.sh" ]; then
 # create
