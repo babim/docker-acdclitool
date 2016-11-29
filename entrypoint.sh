@@ -157,7 +157,6 @@ fi
 if [ ! -f $CONFIGPATH/htpasswd ]; then
 htpasswd -cb $CONFIGPATH/htpasswd $auser $WEBDAVPASS
 fi
-fi
 
 # Create directory to hold locks
 mkdir /locks
