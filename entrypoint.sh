@@ -165,7 +165,7 @@ chown ${USERNAME}:${GROUP} /locks
 # Force the /webdav directory to be owned by webdav/webdav otherwise we won't be
 # able to write to it. This is ok if you mount from volumes, perhaps less if you
 # mount from the host, so do this conditionally.
-OWNERSHIP=${OWNERSHIP:=false}
+OWNERSHIP=${OWNERSHIP:=true}
 if [ "$OWNERSHIP" == "true" ]; then
     chown -R $USERNAME $CLOUDPATH
     chgrp -R $USERNAME $CLOUDPATH
