@@ -22,3 +22,5 @@ volume -v
 CONFIGPATH default: /cache
 CACHEPATH default: /cache
 ```
+Read/write (default is false)
+`-e READWRITE=true`
