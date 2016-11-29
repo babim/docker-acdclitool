@@ -24,7 +24,7 @@ export HTTP_PROXY="$PROXY"
 auid=${auid:-1000}
 agid=${agid:-1000}
 
-if id "$auid" >/dev/null 2>&1; then
+if id user >/dev/null 2>&1; then
         echo "user exists"
 else
         echo "user does not exist"
