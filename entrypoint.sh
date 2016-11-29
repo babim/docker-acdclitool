@@ -147,15 +147,38 @@ webdav:$WEBDAVPASS
 EOF
 fi
 
+# Create directory to hold locks
+mkdir /locks
+chown ${USERNAME}:${GROUP} /locks
+
+# Force the /webdav directory to be owned by webdav/webdav otherwise we won't be
+# able to write to it. This is ok if you mount from volumes, perhaps less if you
+# mount from the host, so do this conditionally.
+OWNERSHIP=${OWNERSHIP:=false}
+if [ "$OWNERSHIP" == "true" ]; then
+    chown -R $USERNAME $CLOUDPATH
+    chgrp -R $USERNAME $CLOUDPATH
+fi
+
+# Setup whitelisting addresses. Adresses that are whitelisted will not need to
+# enter credentials to access the webdav storage.
 if [ -n "$WHITELIST" ]; then
-	sed -i "s/WHITELIST/${WHITELIST}/" $CONFIGPATH/webdav.conf
+    sed -i "s/WHITELIST/${WHITELIST}/" $CONFIGPATH/webdav.conf
 fi
 
-if [ "$READWRITE" = true ]; then
-	sed -i "s/readonly = \"disable\"/readonly = \"enable\"/" $CONFIGPATH/webdav.conf
+# Reflect the value of READWRITE into the lighttpd configuration
+# webdav.is-readonly. Do this at all times, no matters what was in the file (so
+# that THIS shell decides upon the R/W status and nothing else.)
+if [ "$READWRITE" == "true" ]; then
+    sed -i "s/is-readonly = \"\\w*\"/is-readonly = \"disable\"/" $CONFIGPATH/webdav.conf
+else
+    sed -i "s/is-readonly = \"\\w*\"/is-readonly = \"enable\"/" $CONFIGPATH/webdav.conf
 fi
 
-lighttpd -f $CONFIGPATH/lighttpd.conf
+mkfifo -m 600 /tmp/lighttpd.log
+cat <> /tmp/lighttpd.log 1>&2 &
+chown $USERNAME /tmp/lighttpd.log
+lighttpd -f $CONFIGPATH/lighttpd.conf 2>&1
 
 # mount amazon cloud drive to CLOUD PATH
 if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
