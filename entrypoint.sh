@@ -20,20 +20,25 @@ export HTTP_PROXY="$PROXY"
 
 # set ID docker run
 auid=${auid:-1000}
-agid=${agid:-1000}
+agid=${agid:-$auid}
+auser${auser:-user}
 
 if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
   echo "Run in ROOT user"
 else
-  echo "Run in user"
-  if [ ! -d "/home/user" ]; then
-  addgroup -g ${agid} user && \
-  adduser -D -u ${auid} -G user user && \
-  mkdir -p /home/user/.cache/acd_cli #no need
-  ln -sf $CACHEPATH /home/user/.cache/acd_cli #no need
-  chown -R $auid:$agid /home/user #no need
+  echo "Run in $auser"
+  if [ ! -d "/home/$auser" ]; then
+  addgroup -g ${agid} $auser && \
+  adduser -D -u ${auid} -G $auser $auser && \
+  mkdir -p /home/$auser/.cache/acd_cli #no need
+  ln -sf $CACHEPATH /home/$auser/.cache/acd_cli #no need
+  chown -R $auid:$agid /home/$auser #no need
+  chown -R $auid:$agid $CONFIGPATH $CACHEPATH
+  # fix su command user
+  sed -i '$ d' /etc/passwd
+  echo "$auser:x:$auid:$agid:Linux User:/home/$auser:/bin/sh >> /etc/passwd
   fi
-  su - user
+  su - $auser
 fi
 
 # help
