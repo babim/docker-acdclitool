@@ -25,6 +25,7 @@ auid=${auid:-1000}
 agid=${agid:-$auid}
 auser=${auser:-user}
 
+if [ -z "`ls $CLOUDPATH`" ]; then chown -R $auser:$auser $CLOUDPATH; fi
 # create user
 if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
   echo "Run in ROOT user"
@@ -63,7 +64,6 @@ fi
 fi
 
 # webdav
-if [ -z "`ls $CLOUDPATH`" ]; then chown -R $auser:$auser $CLOUDPATH; fi
 # Force user and group because lighttpd runs as webdav
 USERNAME=${auser}
 GROUP=${auser}
