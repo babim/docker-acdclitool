@@ -8,9 +8,9 @@ user_allow_other
 EOF
 
 # set env for ACDCLI
-CONFIGPATH=${CONFIGPATH:-/cache}
-CACHEPATH=${CACHEPATH:-/cache}
-CLOUDPATH=${CLOUDPATH:-/cloud}
+export CONFIGPATH=${CONFIGPATH:-/cache}
+export CACHEPATH=${CACHEPATH:-/cache}
+export CLOUDPATH=${CLOUDPATH:-/cloud}
 if [ ! -d "$CONFIGPATH" ]; then mkdir -p $CONFIGPATH; fi
 if [ ! -d "$CACHEPATH" ]; then mkdir -p $CACHEPATH; fi
 if [ ! -d "$CLOUDPATH" ]; then mkdir -p $CLOUDPATH; fi
