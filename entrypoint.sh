@@ -67,7 +67,7 @@ READWRITE=${READWRITE:=false}
 #	adduser -G ${GROUP} -D -H -u ${USER_UID:=2222} ${USERNAME}
 #fi
 
-chown webdav /var/log/lighttpd
+chown $USERNAME /var/log/lighttpd
 
 # create config for webdav
 if [ ! -f "$CONFIGPATH/lighttpd.conf" ]; then
