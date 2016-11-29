@@ -77,15 +77,23 @@ server.modules = (
     "mod_webdav",
     "mod_auth"
 )
+
 include "/etc/lighttpd/mime-types.conf"
 server.username       = "webdav"
 server.groupname      = "webdav"
-server.document-root  = "$CLOUDPATH"
+
+server.document-root  = "/webdav"
+
 server.pid-file       = "/run/lighttpd.pid"
 server.follow-symlink = "enable"
-var.logdir            = "/var/log/lighttpd"
-accesslog.filename    = var.logdir + "/access.log"
-server.errorlog       = var.logdir  + "/error.log"
+
+# No errorlog specification to keep the default (stderr) and make sure lighttpd
+# does not try closing/reopening. And redirect all access logs to a pipe. See
+# https://redmine.lighttpd.net/issues/2731 for details
+accesslog.filename    = "/tmp/lighttpd.log"
+#Omitting the following on purpose
+#server.errorlog       = "/dev/stderr"
+
 include "$CONFIGPATH/webdav.conf"
 EOF
 fi
