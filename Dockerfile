@@ -19,7 +19,7 @@ RUN pip3 install --upgrade git+https://github.com/yadayada/acd_cli.git
 RUN apk del git
 
 # install webdav
-RUN apk add --no-cache lighttpd lighttpd-mod_webdav lighttpd-mod_auth  apache2-utils
+RUN apk add --no-cache lighttpd lighttpd-mod_webdav lighttpd-mod_auth apache2-utils
 
 #VOLUME ["/config", "/cache", "/data", "/cloud"]
 VOLUME ["/cache", "/data"]
