@@ -1,3 +1,9 @@
+[![](https://images.microbadger.com/badges/image/babim/acdcli.svg)](https://microbadger.com/images/babim/acdcli "Get your own image badge on microbadger.com")[![](https://images.microbadger.com/badges/version/babim/acdcli.svg)](https://microbadger.com/images/babim/acdcli "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/babim/acdcli:single.svg)](https://microbadger.com/images/babim/acdcli:single "Get your own image badge on microbadger.com")[![](https://images.microbadger.com/badges/version/babim/acdcli:single.svg)](https://microbadger.com/images/babim/acdcli:single "Get your own version badge on microbadger.com")
+
+[![](https://images.microbadger.com/badges/image/babim/acdcli:webdav.svg)](https://microbadger.com/images/babim/acdcli:webdav "Get your own image badge on microbadger.com")[![](https://images.microbadger.com/badges/version/babim/acdcli:webdav.svg)](https://microbadger.com/images/babim/acdcli:webdav "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/babim/acdcli:webdav.single.svg)](https://microbadger.com/images/babim/acdcli:webdav.single "Get your own image badge on microbadger.com")[![](https://images.microbadger.com/badges/version/babim/acdcli:webdav.single.svg)](https://microbadger.com/images/babim/acdcli:webdav.single "Get your own version badge on microbadger.com")
+
 # Usage
 acdcli amazon cloud drive tool on alpine linux
 ```
