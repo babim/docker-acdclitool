@@ -27,7 +27,7 @@ auser=${auser:-user}
 
 if [ -z "`ls $CLOUDPATH`" ]; then chown -R $auser:$auser $CLOUDPATH; fi
 # create user
-if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
+if [[ "$auid" = "0" ]] || [[ "$agid" == "0" ]]; then
   echo "Run in ROOT user"
 else
   echo "Run in $auser"
