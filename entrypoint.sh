@@ -23,7 +23,7 @@ auid=${auid:-1000}
 agid=${agid:-$auid}
 auser=${auser:-user}
 
-if [[ "$auid" = "0" ]] || [[ "$aguid" == "0" ]]; then
+if [[ "$auid" = "0" ]] || [[ "$agid" == "0" ]]; then
   echo "Run in ROOT user"
 else
   echo "Run in $auser"
