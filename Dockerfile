@@ -1,30 +1,22 @@
 FROM babim/alpinebase
-
-# create dirs for the config, local mount point, and cloud destination
-#RUN mkdir /config /cache /data /cloud
-RUN mkdir /cache /data /cloud
+ENV WEBDAV_OPTION true
 
 # set the cache, settings, and libfuse path accordingly
 ENV ACD_CLI_CACHE_PATH /cache
 ENV ACD_CLI_SETTINGS_PATH /cache
 ENV LIBFUSE_PATH /usr/lib/libfuse.so.2
 
-# install python 3, fuse, and git
-RUN apk add --no-cache python3 fuse git && pip3 install --upgrade pip
+## alpine linux
+RUN apk add --no-cache wget bash && cd / && wget --no-check-certificate https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20SCRIPT%20AUTO/option.sh && \
+    chmod 755 /option.sh
 
-# install acd_cli
-RUN pip3 install --upgrade git+https://github.com/yadayada/acd_cli.git
-
-# no need for git or the apk cache anymore
-RUN apk del git
+# install
+RUN wget --no-check-certificate -O - https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20acdcli%20install/acdcli_install.sh | bash
 
 # install webdav
 RUN apk add --no-cache lighttpd lighttpd-mod_webdav lighttpd-mod_auth apache2-utils
 
 #VOLUME ["/config", "/cache", "/data", "/cloud"]
-VOLUME ["/cache", "/data"]
-
-ADD entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+VOLUME ["/cache", "/data", "/cloud"]
 
 ENTRYPOINT ["/entrypoint.sh"]
