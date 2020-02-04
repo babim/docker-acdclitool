@@ -1,9 +1,5 @@
 FROM babim/alpinebase
 
-# create dirs for the config, local mount point, and cloud destination
-#RUN mkdir /config /cache /data /cloud
-RUN mkdir /cache /data /cloud
-
 # set the cache, settings, and libfuse path accordingly
 ENV ACD_CLI_CACHE_PATH /cache
 ENV ACD_CLI_SETTINGS_PATH /cache
@@ -11,28 +7,15 @@ ENV LIBFUSE_PATH /usr/lib/libfuse.so.2
 ENV auid 1000
 ENV agid 1000
 
-# install python 3, fuse, and git
-RUN apk add --no-cache python3 fuse git && pip3 install --upgrade pip
+## alpine linux
+RUN apk add --no-cache wget bash && cd / && wget --no-check-certificate https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20SCRIPT%20AUTO/option.sh && \
+    chmod 755 /option.sh
 
-# install acd_cli
-RUN pip3 install --upgrade git+https://github.com/yadayada/acd_cli.git
-
-# no need for git or the apk cache anymore
-RUN apk del git
-
-# overwrite /etc/fuse.conf to allow other users to access the mounted filesystem from outside the container
-RUN sed -i 's/#user_allow_other/user_allow_other/' /etc/fuse.conf
-
-# create user
-RUN adduser -S -D -u $auid -g $agid user && \
-    mkdir -p /home/user/.cache/acd_cli && \
-    ln -sf /cache /home/user/.cache/acd_cli && \
-    chown -R $auid:$agid /home/user
+# install
+RUN wget --no-check-certificate -O - https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20acdcli%20install/acdcli_install.sh | bash
 
 #VOLUME ["/config", "/cache", "/data", "/cloud"]
 VOLUME ["/cache", "/data", "/cloud"]
 
 USER user
-
-ENTRYPOINT ["/usr/bin/acdcli"]
-CMD ["-h"]
+ENTRYPOINT ["/entrypoint.sh"]
